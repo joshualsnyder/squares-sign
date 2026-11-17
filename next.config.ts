@@ -10,6 +10,10 @@ const { version } = JSON.parse(readFileSync("./package.json", "utf8")) as {
 
 const nextConfig: NextConfig = {
   env: {
+    NETLIFY_STORAGE_NAMESPACE:
+      process.env.CONTEXT === "production"
+        ? "production"
+        : process.env.DEPLOY_ID || "local",
     NEXT_PUBLIC_SIGNUDOC_VERSION: version,
     // Whether Vercel BotID is on, decided once at build time so the browser
     // code that adds its proof and the server code that checks it cannot

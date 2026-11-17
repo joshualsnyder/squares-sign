@@ -26,6 +26,7 @@ import {
   type StorageService,
 } from "@/lib/services/storage";
 import { isPendingUploadKey } from "@/lib/services/storage-keys";
+import { uploadSizeLimit } from "@/lib/services/upload-limits";
 
 export async function POST(request: Request) {
   const sessionResult = await requireVerifiedSenderSession(request);
@@ -130,6 +131,12 @@ async function readFormRequest(
 
   if (!(uploadedFile instanceof File)) {
     return invalidRequest("A PDF file is required.");
+  }
+
+  if (uploadedFile.size > uploadSizeLimit()) {
+    return invalidRequest(
+      `This file exceeds the ${uploadSizeLimit() / 1024 / 1024} MB limit.`,
+    );
   }
 
   return {

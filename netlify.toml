@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build -- --webpack"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[functions]
+  included_files = ["src/assets/fonts/*.ttf", "node_modules/harfbuzzjs/dist/harfbuzz-subset.wasm"]
+
+[functions."daily-maintenance"]
+  schedule = "0 9 * * *"

@@ -12,10 +12,14 @@
  *   the Vercel Marketplace.
  * - POSTGRES_URL / POSTGRES_URL_NON_POOLING: set by Supabase through the
  *   Vercel Marketplace.
+ * - NETLIFY_DB_URL: provisioned by Netlify Database.
  */
+import { getConnectionString } from "@netlify/database";
+
 const DATABASE_URL_PAIRS = [
   ["DATABASE_URL", "DATABASE_URL_UNPOOLED"],
   ["POSTGRES_URL", "POSTGRES_URL_NON_POOLING"],
+  ["NETLIFY_DB_URL", "NETLIFY_DB_URL"],
 ];
 
 export const DATABASE_URL_VARIABLES = DATABASE_URL_PAIRS.map(
@@ -49,6 +53,14 @@ export function resolveDatabaseUrl(env = process.env) {
 
     if (value) {
       return { name: runtimeName, value };
+    }
+  }
+
+  if (env === process.env) {
+    try {
+      return { name: "NETLIFY_DB_URL", value: getConnectionString() };
+    } catch {
+      // A build without a provisioned database can still show setup help.
     }
   }
 

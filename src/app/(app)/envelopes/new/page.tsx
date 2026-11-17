@@ -2,6 +2,7 @@ import { UploadShell } from "@/components/envelopes/upload-shell";
 import { getAuthSession } from "@/lib/auth/server";
 import { supportsDirectUploads } from "@/lib/services/storage";
 import { buildPendingUploadPrefix } from "@/lib/services/storage-keys";
+import { uploadSizeLimit } from "@/lib/services/upload-limits";
 
 export default async function NewEnvelopePage() {
   // On Vercel Blob the browser sends the PDF straight to storage, into this
@@ -10,6 +11,7 @@ export default async function NewEnvelopePage() {
 
   return (
     <UploadShell
+      maxFileSizeBytes={uploadSizeLimit()}
       directUploadPrefix={
         session ? buildPendingUploadPrefix(session.user.id) : null
       }
