@@ -98,6 +98,7 @@ function UploadShellLayout({
   isBusy,
   isDragActive,
   isSubmitting = false,
+  maxFileSizeBytes = MAX_FILE_SIZE_BYTES,
   onDropzoneKeyDown,
   onOpenFilePicker,
   onRemoveFile,
@@ -112,6 +113,7 @@ function UploadShellLayout({
   isBusy: boolean;
   isDragActive: boolean;
   isSubmitting?: boolean;
+  maxFileSizeBytes?: number;
   onContinue?: () => void;
   onDropzoneKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
   onOpenFilePicker: () => void;
@@ -212,7 +214,7 @@ function UploadShellLayout({
                     </p>
                   </div>
                   <p className="text-[0.8125rem] font-medium text-(--tertiary)">
-                    PDF only - 20 MB max
+                    PDF only - {maxFileSizeBytes / 1024 / 1024} MB max
                   </p>
                 </>
               )}
@@ -326,9 +328,13 @@ type UploadShellProps = {
    * null when uploads go through the app.
    */
   directUploadPrefix?: string | null;
+  maxFileSizeBytes?: number;
 };
 
-export function UploadShell({ directUploadPrefix = null }: UploadShellProps) {
+export function UploadShell({
+  directUploadPrefix = null,
+  maxFileSizeBytes = MAX_FILE_SIZE_BYTES,
+}: UploadShellProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState<UploadSummary | null>(null);
@@ -417,8 +423,10 @@ export function UploadShell({ directUploadPrefix = null }: UploadShellProps) {
       return;
     }
 
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      setErrorMessage(errorMessageMap["too-large"]);
+    if (file.size > maxFileSizeBytes) {
+      setErrorMessage(
+        `This file exceeds the ${maxFileSizeBytes / 1024 / 1024} MB limit.`,
+      );
       setSummary(null);
       startThumbnail(null);
       return;
@@ -594,6 +602,7 @@ export function UploadShell({ directUploadPrefix = null }: UploadShellProps) {
         type="file"
       />
       <UploadShellLayout
+        maxFileSizeBytes={maxFileSizeBytes}
         canContinue={canContinue}
         errorMessage={errorMessage}
         isBusy={isCreatingDraft}

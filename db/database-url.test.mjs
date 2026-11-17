@@ -8,6 +8,26 @@ import {
   resolveMigrationDatabaseUrl,
 } from "./database-url.mjs";
 
+test("Netlify's database URL is used without overriding an explicit database", () => {
+  assert.deepEqual(
+    resolveDatabaseUrl({ NETLIFY_DB_URL: "postgres://netlify" }),
+    {
+      name: "NETLIFY_DB_URL",
+      value: "postgres://netlify",
+    },
+  );
+  assert.deepEqual(
+    resolveDatabaseUrl({
+      DATABASE_URL: "postgres://chosen",
+      NETLIFY_DB_URL: "postgres://netlify",
+    }),
+    {
+      name: "DATABASE_URL",
+      value: "postgres://chosen",
+    },
+  );
+});
+
 test("migrations prefer the direct URL that belongs to the URL in use", () => {
   assert.deepEqual(
     resolveMigrationDatabaseUrl({

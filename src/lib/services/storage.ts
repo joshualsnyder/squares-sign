@@ -2,6 +2,7 @@ import { type EnvSource } from "../utils/env.ts";
 import { createBlobStorageService } from "./storage/blob.ts";
 import { resolveStorageDriver } from "./storage/driver.ts";
 import { createLocalStorageService } from "./storage/local.ts";
+import { createNetlifyStorageService } from "./storage/netlify.ts";
 import { type StorageService } from "./storage/types.ts";
 
 export {
@@ -44,6 +45,8 @@ export function createStorageService({
   env = process.env,
 }: CreateStorageServiceOptions = {}): StorageService {
   switch (resolveStorageDriver(env)) {
+    case "netlify":
+      return createNetlifyStorageService({ env });
     case "blob":
       return createBlobStorageService({ env });
     case "local":

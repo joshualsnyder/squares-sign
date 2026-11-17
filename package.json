@@ -22,9 +22,12 @@
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/**/*.test.ts\" \"db/**/*.test.mjs\"",
     "restore-backup": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/restore-backup.ts",
     "test:db": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test --test-concurrency=1 \"src/**/*.dbtest.ts\"",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "deploy:netlify": "node scripts/deploy-netlify.mjs"
   },
   "dependencies": {
+    "@netlify/blobs": "^11.1.9",
+    "@netlify/database": "^2.0.3",
     "@pdf-lib/fontkit": "^1.1.1",
     "@signpdf/placeholder-pdf-lib": "3.3.0",
     "@signpdf/signer-p12": "3.3.0",
@@ -39,7 +42,7 @@
     "harfbuzzjs": "1.6.4",
     "lucide-react": "^0.577.0",
     "next": "16.4.6",
-    "node-forge": "1.4.2",
+    "node-forge": "1.4.3",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "5.5.207",
     "pg": "^8.23.1",
